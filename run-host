@@ -28,7 +28,7 @@ unmount-env() {
   [ "$ENV" == "dev" -o "$ENV" == "prod" ] || quit "invalid env $ENV"
 
   cd $HOST_ROOT
-  sudo umount $ENV
+  sudo umount $2 $ENV
 }
 
 list-mounts() {
