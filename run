@@ -1,0 +1,58 @@
+#!/bin/bash
+
+HOST_ROOT=$(dirname $(realpath $0))
+PROJECT_ROOT=${PROJECT_ROOT:-"/home/vagrant/dev/share-space"}
+
+mount() {
+  ENV=$1
+  GUEST=share-space-$ENV
+
+  [ $ENV == "dev" -o $ENV == "prod" ] || echo "invalid env $ENV"; exit 1
+
+  cd $HOST_ROOT  
+  mkdir -p $ENV
+  sudo mount -t nfs $GUEST:$PROJECT_ROOT $HOST_ROOT/$ENV
+}
+
+unmount() {
+  ENV=$1
+  GUEST=share-space-$ENV
+
+  [ $ENV == "dev" -o $ENV == "prod" ] || echo "invalid env $ENV"; exit 1
+
+  cd $HOST_ROOT
+  sudo umount $ENV
+}
+
+help() {
+  echo "Usage: $prog_name { $(join_by " | " ${CMDS[*]}) } [args ...]"
+}
+
+### Command Line Interface
+
+join_by() {
+  local d=$1; 
+  shift; 
+  echo -n "$1"; 
+  shift; 
+  printf "%s" "${@/#/$d}"
+}
+
+CMDS=(mount \
+      unmount \
+      help)
+
+prog_name=$0
+cmd=$1
+shift || true
+
+for option in ${CMDS[*]}; do
+  if [ "$cmd" == "$option" ]; then
+    $cmd $@
+    exit
+  fi
+done
+
+echo "Unrecognized command $cmd"
+help
+exit 1

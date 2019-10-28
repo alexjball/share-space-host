@@ -1,0 +1,6 @@
+#!/bin/bash
+
+cd $PROJECT_ROOT
+REACT_APP_DEFAULT_ROOM_SERVER="room.aballslab.com" \
+REACT_APP_VNC_SERVER="http://share-space-dev:6080/vnc.html?host=share-space-dev&port=6080" \
+./run stack_up_dev

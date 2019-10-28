@@ -1,7 +1,4 @@
 #!/bin/bash
-#
-# Usage: [ OPT=VAL ... ] sudo -u vagrant provision_vagrant
-# 
 
 quit() {
   echo $1
