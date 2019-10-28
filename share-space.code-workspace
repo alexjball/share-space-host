@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "./dev"
+		},
+		{
+			"path": "./prod"
+		}
+	],
+	"settings": {
+		"files.exclude": {
+			"dev": true,
+			"prod": true
+		}
+	}
+}
