@@ -1,4 +1,0 @@
-#!/bin/bash
-
-cd $PROJECT_ROOT
-./run stack_down

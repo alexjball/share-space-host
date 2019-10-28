@@ -1,27 +1,38 @@
 #!/bin/bash
+#
+# Groups commands that run on the Share Space host.
+
+quit() {
+  echo $1
+  exit 1
+}
 
 HOST_ROOT=$(dirname $(realpath $0))
 PROJECT_ROOT=${PROJECT_ROOT:-"/home/vagrant/dev/share-space"}
 
-mount() {
+mount-env() {
   ENV=$1
   GUEST=share-space-$ENV
 
-  [ $ENV == "dev" -o $ENV == "prod" ] || echo "invalid env $ENV"; exit 1
+  [ "$ENV" == "dev" -o "$ENV" == "prod" ] || quit "invalid env $ENV"
 
   cd $HOST_ROOT  
   mkdir -p $ENV
   sudo mount -t nfs $GUEST:$PROJECT_ROOT $HOST_ROOT/$ENV
 }
 
-unmount() {
+unmount-env() {
   ENV=$1
   GUEST=share-space-$ENV
 
-  [ $ENV == "dev" -o $ENV == "prod" ] || echo "invalid env $ENV"; exit 1
+  [ "$ENV" == "dev" -o "$ENV" == "prod" ] || quit "invalid env $ENV"
 
   cd $HOST_ROOT
   sudo umount $ENV
+}
+
+list-mounts() {
+  mount | grep "share-space"
 }
 
 help() {
@@ -38,8 +49,9 @@ join_by() {
   printf "%s" "${@/#/$d}"
 }
 
-CMDS=(mount \
-      unmount \
+CMDS=(mount-env \
+      unmount-env \
+      list-mounts \
       help)
 
 prog_name=$0

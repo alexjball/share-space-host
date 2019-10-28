@@ -1,0 +1,91 @@
+#!/bin/bash
+#
+# Groups commands that run in a specific Share Space environment.
+# 
+# After a sucessful install, these commands run in a shell
+# with $PROJECT_ROOT set to install-time $GUEST_PROJECT_ROOT and 
+# cwd == $PROJECT_ROOT.
+
+quit() {
+  echo $1
+  exit 1
+}
+
+[ "$(whoami)" != "root" ] || quit "Don't run as root"
+
+### Commands
+
+stack-install() {
+  ## Configuration variables
+
+  # The repo containing the share space stack.
+  PROJECT_REPO=${PROJECT_REPO:-"https://github.com/alexjball/share-space.git"}
+
+  # Where to check out the repo. The stack itself determines its project root
+  # based on the realpath of its install script. This will be accessible in 
+  # $PROJECT_ROOT after a successful install.
+  GUEST_PROJECT_ROOT=${GUEST_PROJECT_ROOT:-"$HOME/dev/share-space"}
+
+  ## Source checkout
+
+  echo "Installing project in $GUEST_PROJECT_ROOT"
+
+  if [ -a $GUEST_PROJECT_ROOT/.git ]; then
+    echo "Repo already cloned"
+  else
+    git clone --recurse-submodules $PROJECT_REPO $GUEST_PROJECT_ROOT || \
+      quit "Couldn't check out project"
+  fi
+
+  ## Hand off to the stack repo
+
+  $GUEST_PROJECT_ROOT/run stack-install
+}
+
+stack-build() {
+  $PROJECT_ROOT/run stack-build
+}
+
+stack-up() {
+  $PROJECT_ROOT/run stack-up
+}
+
+stack-down() {
+  $PROJECT_ROOT/run stack-down
+}
+
+stack-status() {
+  $PROJECT_ROOT/run stack-status
+}
+
+### Command Line Interface
+
+join_by() {
+  local d=$1; 
+  shift; 
+  echo -n "$1"; 
+  shift; 
+  printf "%s" "${@/#/$d}"
+}
+
+CMDS=(stack-install \
+      stack-build \
+      stack-up \
+      stack-down \
+      stack-status \
+      help)
+
+prog_name=$0
+cmd=$1
+shift || true
+
+for option in ${CMDS[*]}; do
+  if [ "$cmd" == "$option" ]; then
+    $cmd $@
+    exit
+  fi
+done
+
+echo "Unrecognized command $cmd"
+help
+exit 1
