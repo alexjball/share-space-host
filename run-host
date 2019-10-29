@@ -7,26 +7,37 @@ quit() {
   exit 1
 }
 
+GUEST() {
+  echo "share-space-$1"
+}
+
 HOST_ROOT=$(dirname $(realpath $0))
 PROJECT_ROOT=${PROJECT_ROOT:-"/home/vagrant/dev/share-space"}
+
+_is_mounted() {
+  local ENV=$1
+  mount | grep -q "$(GUEST $ENV):$PROJECT_ROOT on $HOST_ROOT/$ENV"
+}
 
 mount-env() {
   cd $HOST_ROOT  
 
   local ENV=$1
-  local GUEST=share-space-$ENV
 
-  if ! mount | grep -q "$GUEST:$PROJECT_ROOT on $HOST_ROOT/$ENV"; then
+  if ! $(_is_mounted $ENV); then
     mkdir -p $ENV
-    sudo mount -t nfs $GUEST:$PROJECT_ROOT $HOST_ROOT/$ENV
+    sudo mount -t nfs $(GUEST $ENV):$PROJECT_ROOT $HOST_ROOT/$ENV
   fi
 }
 
 unmount-env() {
+  cd $HOST_ROOT
+
   local ENV=$1
 
-  cd $HOST_ROOT
-  sudo umount $2 $ENV
+  if $(_is_mounted $ENV); then
+    sudo umount $2 $ENV
+  fi
 }
 
 list-mounts() {
@@ -50,10 +61,12 @@ stack() {
       vagrant up $ENV
       ;;
     halt)
-      vagrant halt $ENV
+      ./run-host stack $ENV unmount $3 && \
+        vagrant halt $ENV
       ;;
     destroy)
-      vagrant destroy $3 $ENV
+      ./run-host stack $ENV unmount $3 && \
+        vagrant destroy $3 $ENV
       ;;
     mount)
       vagrant up $ENV && \
@@ -62,8 +75,13 @@ stack() {
     unmount)
       ./run-host unmount-env $ENV $3
       ;;
-    *)
+    build|up|down|status)
       vagrant provision $ENV --provision-with=stack-$CMD
+      ;;
+    *)
+      echo "Unrecognized command $CMD"
+      echo $USAGE
+      exit 1
   esac
 }
 
