@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # A publicly accessible host that serves the room connection 
-export REACT_APP_DEFAULT_ROOM_SERVER="room.aballslab.com" 
+export REACT_APP_DEFAULT_ROOM_SERVER="share-space-prod" 
 
 # A privately accessible URL for VNC connections.
 # To reference machines by hostname, add a hostname: IP mapping to /etc/hosts

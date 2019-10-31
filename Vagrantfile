@@ -25,6 +25,9 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.provision "stack-install", type: "shell", privileged: false,               path: "run-env", args: "stack-install"
+
+  # Do not run any of these on up, onl with vagrant provision, 
+  # since the deploymentrc is loaded last on up
   config.vm.provision "stack-build",   type: "shell", privileged: false, run: "never", path: "run-env", args: "stack-build"
   config.vm.provision "stack-up",      type: "shell", privileged: false, run: "never", path: "run-env", args: "stack-up"
   config.vm.provision "stack-down",    type: "shell", privileged: false, run: "never", path: "run-env", args: "stack-down"

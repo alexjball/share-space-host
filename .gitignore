@@ -2,3 +2,5 @@
 /dev/
 /prod/
 /site/
+.prodrc
+.devrc
