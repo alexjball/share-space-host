@@ -9,11 +9,16 @@ Vagrant.configure("2") do |config|
   # - Add a define block with the name and hostname of the environment
   # - Assign an unused IP to the environment. IP's in this file are based
   #   on the default VirtualBox private network.
+  # - Add a conditional to copy ./.${ENV}rc to ~/.deploymentrc on the VM. 
+  #   Environment-specific configuration is stored in this file. The file is
+  #   not tracked, so the conditional is necessary to avoid errors checkouts
+  #   without an rc.
   # - (optional) Add a line to /etc/hosts mapping the env IP to its hostname.
   #   this allows accessing the env locally by its hostname rather than IP.
-  # - Add a provisioner for the environment's envrc to define env-specific
-  #   variables.
-
+  # - (optional) Copy ./.example-envrc to ./.${ENV}rc and modify as needed. 
+  #
+  # Specific environments can be controlled using ./run-host stack $ENV ...
+  
   config.vm.define "dev", primary: true do |dev|
     dev.vm.network "private_network", ip: "172.28.128.10"
     dev.vm.hostname = "share-space-dev"
