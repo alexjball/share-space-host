@@ -1,4 +1,5 @@
 #!/bin/bash
 
+export SHARE_SPACE_ENV="dev"
 export REACT_APP_DEFAULT_ROOM_SERVER="share-space-dev:3001" 
 export REACT_APP_VNC_SERVER="http://share-space-dev:6080/vnc.html?host=share-space-dev&port=6080"

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export SHARE_SPACE_ENV="prod"
+
 # A publicly accessible host that serves the room connection 
 export REACT_APP_DEFAULT_ROOM_SERVER="share-space-prod" 
 
