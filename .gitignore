@@ -1,6 +1,8 @@
 .vagrant/
 /dev/
 /prod/
+/staging/
 /site/
 .prodrc
 .devrc
+.stagingrc

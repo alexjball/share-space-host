@@ -8,12 +8,16 @@
 		},
 		{
 			"path": "./prod"
+		},
+		{
+			"path": "./staging"
 		}
 	],
 	"settings": {
 		"files.exclude": {
 			"dev": true,
-			"prod": true
+			"prod": true,
+			"staging": true
 		}
 	}
 }

@@ -1,6 +1,10 @@
 #!/bin/bash
 
+# Name of the environment, should match the machine name from the Vagrantfile
 export SHARE_SPACE_ENV="prod"
+
+# Code used to authenticate room clients
+export SHARE_SPACE_ROOM_CODE="share-space"
 
 # A publicly accessible host that serves the room connection 
 export REACT_APP_DEFAULT_ROOM_SERVER="share-space-prod" 

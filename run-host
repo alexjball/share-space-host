@@ -49,7 +49,7 @@ stack() {
 
   local ENV=$1
   local CMD=$2
-  local USAGE="Usage: run-host stack ENV {init|mount|build|up|down|status|unmount|halt|destroy}"
+  local USAGE="Usage: run-host stack ENV {init|mount|build|reload-envrc|up|down|status|unmount|halt|destroy} [OPTION...]"
 
   if [ "$ENV" == "help" -o "$CMD" == "help" -o -z "$CMD" -o -z "$ENV" ]; then
     echo $USAGE
@@ -74,6 +74,9 @@ stack() {
       ;;
     unmount)
       ./run-host unmount-env $ENV $3
+      ;;
+    reload-envrc)
+      vagrant provision $ENV --provision-with=.${ENV}rc
       ;;
     build|up|down|status)
       vagrant provision $ENV --provision-with=stack-$CMD
