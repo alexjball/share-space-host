@@ -47,8 +47,8 @@ Vagrant.configure("2") do |config|
   config.vm.synced_folder "site", "/home/vagrant/site",  create: true
 
   config.vm.provider "virtualbox" do |vb|
-    vb.memory = "4096"
-    vb.cpus = 4
+    vb.memory = "8096"
+    vb.cpus = 8
   end
 
   config.vm.provision "stack-install", type: "shell", privileged: false,               path: "run-env", args: "stack-install"
